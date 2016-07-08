@@ -5,6 +5,8 @@
 
 # Load used modules
 
+
+
 include(hunter_add_version)
 include(hunter_cacheable)
 include(hunter_download)
@@ -29,6 +31,10 @@ hunter_pick_scheme(DEFAULT url_sha1_autotools
     url_sha1_curl_windows
 )
 
+
+
 hunter_cacheable(curl)
 
-hunter_download(PACKAGE_NAME curl)
+hunter_download(PACKAGE_NAME curl
+
+    PACKAGE_DEPENDS_ON OpenSSL)

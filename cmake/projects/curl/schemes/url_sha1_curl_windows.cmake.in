@@ -3,10 +3,20 @@
 
 cmake_minimum_required(VERSION 3.0)
 project(Hunter)
+include("@HUNTER_SELF@/cmake/Hunter")
+hunter_add_package(OpenSSL)
+find_package(OpenSSL REQUIRED)
+
+
 
 include(ExternalProject) # ExternalProject_Add
 
+
+
+
 # Scheme for download and install Curl library for Windows
+
+
 
 list(APPEND CMAKE_MODULE_PATH "@HUNTER_SELF@/cmake/modules")
 
@@ -25,6 +35,7 @@ hunter_test_string_not_empty("@HUNTER_PACKAGE_SHA1@")
 hunter_test_string_not_empty("@HUNTER_PACKAGE_DOWNLOAD_DIR@")
 hunter_test_string_not_empty("@HUNTER_PACKAGE_SOURCE_DIR@")
 hunter_test_string_not_empty("@HUNTER_PACKAGE_INSTALL_PREFIX@")
+hunter_test_string_not_empty("@HUNTER_INSTALL_PREFIX@")
 hunter_test_string_not_empty("@HUNTER_MSVC_ARCH@")
 hunter_test_string_not_empty("@HUNTER_MSVC_VCVARSALL@")
 hunter_test_string_not_empty("@HUNTER_PACKAGE_LICENSE_FILE@")
@@ -68,9 +79,7 @@ ExternalProject_Add(
     #COMMAND
     #"ms\\${do_ms}"
     BUILD_COMMAND
-    WORKING_DIRECTORY
-    winbuild
-    nmake /f Makefile.vc mode=dll WITH_SSL=static WITH_DEVEL=%OPENSSL% VC=12 ENABLE_SSPI=yes ENABLE_IDN=yes ENABLE_WINSSL=no DEBUG=no MACHINE=@HUNTER_MSVC_ARCH@ GEN_PDB=yes ENABLE_IPV6=yes
+    cd winbuild &&  nmake /f Makefile.vc mode=dll WITH_SSL=static WITH_DEVEL="@HUNTER_INSTALL_PREFIX@" VC=12 ENABLE_SSPI=yes ENABLE_IDN=yes ENABLE_WINSSL=no DEBUG=no MACHINE=@HUNTER_MSVC_ARCH@ GEN_PDB=yes ENABLE_IPV6=yes
     #nmake -f "ms\\nt.mak"
     BUILD_IN_SOURCE
     1

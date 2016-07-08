@@ -12,9 +12,9 @@ project(download-curl)
 hunter_add_package(curl)
 find_package(curl REQUIRED)
 
-message("curl_DIR: ${OpenCV_DIR}")
-message("curl_CONFIG: ${OpenCV_CONFIG}")
-message("curl_LIBS: ${OpenCV_LIBS}")
+message("curl_DIR: ${Curl_DIR}")
+message("curl_CONFIG: ${curl_CONFIG}")
+message("curl_LIBS: ${curl_LIBS}")
 
 add_executable(foo foo.cpp)
 target_link_libraries(foo PRIVATE ${curl_LIBS})
