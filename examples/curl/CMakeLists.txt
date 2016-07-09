@@ -12,9 +12,11 @@ project(download-curl)
 hunter_add_package(curl)
 find_package(curl REQUIRED)
 
-message("curl_DIR: ${Curl_DIR}")
-message("curl_CONFIG: ${curl_CONFIG}")
-message("curl_LIBS: ${curl_LIBS}")
+
+message("CURL_INCLUDE_DIRS: ${CURL_INCLUDE_DIRS}")
+message("CURL_LIBRARIES: ${CURL_LIBRARIES}")
+message("CURL_FOUND: ${CURL_FOUND}")
+message("CURL_VERSION_STRING: ${CURL_VERSION_STRING}")
 
 add_executable(foo foo.cpp)
 target_link_libraries(foo PRIVATE ${curl_LIBS})
