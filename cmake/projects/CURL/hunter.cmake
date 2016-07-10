@@ -29,7 +29,7 @@ hunter_add_version(
 )
 
 # Pick a download scheme
-hunter_pick_scheme(DEFAULT url_sha1_autotools
+hunter_pick_scheme(DEFAULT url_sha1_curl_autotools
     WINDOWS
     url_sha1_curl_windows
 )
