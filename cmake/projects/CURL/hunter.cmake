@@ -12,11 +12,14 @@ include(hunter_cacheable)
 include(hunter_download)
 include(hunter_pick_scheme)
 
+
+hunter_add_package(OpenSSL)
+hunter_add_package(ZLIB)
 # List of versions here...
 
 hunter_add_version(
     PACKAGE_NAME
-    curl
+    CURL
     VERSION
     "7.49.1"
     URL
@@ -33,8 +36,8 @@ hunter_pick_scheme(DEFAULT url_sha1_curl_autotools
 
 
 
-hunter_cacheable(curl)
+hunter_cacheable(CURL)
 
-hunter_download(PACKAGE_NAME curl
+hunter_download(PACKAGE_NAME CURL
 
-    PACKAGE_DEPENDS_ON OpenSSL)
+    PACKAGE_DEPENDS_ON OpenSSL ZLIB)
