@@ -47,4 +47,13 @@ hunter_autotools_project("@HUNTER_EP_NAME@"
       "@HUNTER_INSTALL_PREFIX@"
     PARALLEL_JOBS
       "@HUNTER_JOBS_OPTION@"
+    EXTRA_FLAGS
+      --with-ssl
+    MODIFY_PKG_CONFIG
+
+
+    CPPFLAGS
+        "-I@HUNTER_INSTALL_PREFIX@/include" 
+    LDFLAGS
+        "-L@HUNTER_INSTALL_PREFIX@/lib"
 )
