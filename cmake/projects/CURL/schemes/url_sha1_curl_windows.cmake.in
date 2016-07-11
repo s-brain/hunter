@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.0)
 project(Hunter)
 include("@HUNTER_SELF@/cmake/Hunter")
 hunter_add_package(OpenSSL)
-find_package(OpenSSL REQUIRED)
+find_package(OpenSSL)
 
 
 
@@ -24,6 +24,7 @@ include(hunter_fatal_error)
 include(hunter_internal_error)
 include(hunter_status_debug)
 include(hunter_test_string_not_empty)
+
 
 hunter_status_debug("Scheme: url_sha1_curl_windows")
 
@@ -51,14 +52,42 @@ else()
   set(log_opts "")
 endif()
 
+
+
+
 ## workout output directory from options for install step 
 #build assuming specific build options 
+SET(CURL_BUILD_OUTPUT "@HUNTER_PACKAGE_SOURCE_DIR@/Builds/libcurl-vc@HUNTER_MSVC_VERSION@-@HUNTER_MSVC_ARCH@")
+SET(CURL_BUILD_COMMAND "")
 
-SET(CURL_BUILD_OUTPUT "@HUNTER_PACKAGE_SOURCE_DIR@/Builds/libcurl-vc@HUNTER_MSVC_VERSION@-@HUNTER_MSVC_ARCH@-release-dll-ssl-static-ipv6-sspi")
+# build release version allways
+#if(CMAKE_BUILD_TYPE STREQUAL Release)
+  SET(CURL_BUILD_COMMAND "${CURL_BUILD_COMMAND} DEBUG=no")
+  SET(CURL_BUILD_OUTPUT "${CURL_BUILD_OUTPUT}-release")
+#else()
+#  SET(CURL_BUILD_COMMAND "${CURL_BUILD_COMMAND} DEBUG=yes")
+#  SET(CURL_BUILD_OUTPUT "${CURL_BUILD_OUTPUT}-debug") 
+#endif()
 
 
+# Hunter builds static libraries by default
+if(BUILD_SHARED_LIBS)
+  SET(CURL_BUILD_MODE "mode=dll")
+  SET(CURL_BUILD_OUTPUT "${CURL_BUILD_OUTPUT}-dll")
+else()
+  SET(CURL_BUILD_MODE "mode=static")
+  SET(CURL_BUILD_OUTPUT "${CURL_BUILD_OUTPUT}-static")
+endif()
 
+if(OpenSSL_FOUND)
+  SET(CURL_BUILD_SSL "WITH_SSL=static")
+  SET(CURL_BUILD_OUTPUT "${CURL_BUILD_OUTPUT}-ssl")
+endif()
 
+# add rest of defaults
+SET(CURL_BUILD_OUTPUT "${CURL_BUILD_OUTPUT}-static-ipv6-sspi")
+
+hunter_status_debug("Curl Build Folder: ${CURL_BUILD_OUTPUT}")
 
 ExternalProject_Add(
     "@HUNTER_EP_NAME@"
@@ -72,19 +101,15 @@ ExternalProject_Add(
     "@HUNTER_PACKAGE_SOURCE_DIR@"
     INSTALL_DIR
     "@HUNTER_PACKAGE_INSTALL_PREFIX@"
-        # not used, just avoid creating Install/<name> empty directory
     CONFIGURE_COMMAND
     "@HUNTER_MSVC_VCVARSALL@" "@HUNTER_MSVC_ARCH@"
    
     BUILD_COMMAND
-    cd winbuild &&  nmake /f Makefile.vc mode=dll WITH_SSL=static WITH_DEVEL="@HUNTER_INSTALL_PREFIX@" VC=@HUNTER_MSVC_VERSION@ ENABLE_SSPI=yes ENABLE_IDN=yes ENABLE_WINSSL=no DEBUG=no MACHINE=@HUNTER_MSVC_ARCH@ GEN_PDB=yes ENABLE_IPV6=yes
-    #nmake -f "ms\\nt.mak"
+    cd winbuild &&  nmake /f Makefile.vc ${CURL_BUILD_MODE} ${CURL_BUILD_SSL} WITH_DEVEL="@HUNTER_INSTALL_PREFIX@" VC=@HUNTER_MSVC_VERSION@ ENABLE_SSPI=yes ENABLE_IDN=yes ENABLE_WINSSL=no MACHINE=@HUNTER_MSVC_ARCH@ GEN_PDB=yes ENABLE_IPV6=yes ${CURL_BUILD_COMMAND}
     BUILD_IN_SOURCE
     1
     INSTALL_COMMAND
     "@CMAKE_COMMAND@" -E copy_directory ${CURL_BUILD_OUTPUT} "@HUNTER_INSTALL_PREFIX@"
-    #cd winbuild && nmake /f Makefile.vc install
-    
     COMMAND # Copy license files
     "@CMAKE_COMMAND@"
     "-Dsrcdir=@HUNTER_PACKAGE_SOURCE_DIR@"
