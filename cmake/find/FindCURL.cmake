@@ -47,6 +47,8 @@ find_library(CURL_LIBRARY NAMES
     curllib_static
   # Windows older "Win32 - MSVC" prebuilts (libcurl.lib, e.g. libcurl-7.15.5-win32-msvc.zip):
     libcurl
+  # Windows static lib
+    libcurl_a
 )
 mark_as_advanced(CURL_LIBRARY)
 
@@ -83,12 +85,18 @@ find_package(OpenSSL)
 if(CURL_FOUND)
   set(CURL_LIBRARIES ${CURL_LIBRARY})
   set(CURL_INCLUDE_DIRS ${CURL_INCLUDE_DIR})
+  string(FIND "${CURL_LIBRARY}" "libcurl_a" pos1)
 
+  #check if windows static lib...
+  if(NOT(${pos1} LESS 0))
+    SET(CURL_INTERFACE_COMPILE_DEFS CURL_STATICLIB)
+  endif()
   
 
   add_library("curl::curl" UNKNOWN IMPORTED)
     set_target_properties("curl::curl"
       PROPERTIES
+      INTERFACE_COMPILE_DEFINITIONS "${CURL_INTERFACE_COMPILE_DEFS}"
       INTERFACE_INCLUDE_DIRECTORIES "${CURL_INCLUDE_DIR}"
       INTERFACE_LINK_LIBRARIES ${ZLIB_LIBRARY} ${OPENSSL_LIBRARIES}	 
       IMPORTED_LOCATION "${CURL_LIBRARY}"
