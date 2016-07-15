@@ -11,7 +11,7 @@ project(download-curl)
 
 hunter_add_package(CURL)
 find_package(CURL REQUIRED)
-find_package(ZLIB REQUIRED)
+
 
 
 message("CURL_INCLUDE_DIRS: ${CURL_INCLUDE_DIRS}")
@@ -22,4 +22,4 @@ message("CURL_VERSION_STRING: ${CURL_VERSION_STRING}")
 add_executable(foo foo.cpp)
 
 
-target_link_libraries(foo PRIVATE curl::libcurl)
+target_link_libraries(foo PRIVATE CURL::libcurl)
