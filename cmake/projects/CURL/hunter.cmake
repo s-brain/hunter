@@ -19,12 +19,13 @@ hunter_add_version(
     PACKAGE_NAME
     CURL
     VERSION
-    "7.49.1-DEV-v2"
+    "7.49.1-DEV-v3"
     URL
-    "https://github.com/hunter-packages/curl/archive/hunter-7.49.1-v2.tar.gz"
+    "https://github.com/hunter-packages/curl/archive/hunter-7.49.1-v3.tar.gz"
     SHA1
-    073dc63a610c1a2542dce433292870b5214f9c1f
+    9905952494867076fd136a7ee9fce482d80c451c
 )
+
 
 
 hunter_cmake_args(
@@ -33,7 +34,7 @@ hunter_cmake_args(
         BUILD_CURL_TESTS=OFF
         BUILD_CURL_EXE=OFF
         CMAKE_USE_OPENSSL=ON
-        CMAKE_USE_LIBSSH2=ON
+        CMAKE_USE_LIBSSH2=OFF
  )
 
 
