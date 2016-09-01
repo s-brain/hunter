@@ -1,4 +1,4 @@
-# Copyright (c) 2015, David Hirvonen
+# Copyright (c) 2015, Steve Brain
 # All rights reserved.
 
 # !!! DO NOT PLACE HEADER GUARDS HERE !!!
